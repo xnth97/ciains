@@ -11,6 +11,7 @@ import {
   DialogType,
   Panel,
   CommandBar,
+  Link,
 } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import './home.scss';
@@ -76,7 +77,7 @@ const Home = () => {
             ]}
           />
         </div>
-        <div className='consoleInput'>
+        <div>
           <Stack
             horizontal
             horizontalAlign='space-between'
@@ -103,6 +104,16 @@ const Home = () => {
             { key: 'name', name: 'Name', fieldName: 'name', minWidth: 200, isResizable: true },
             { key: 'path', name: 'Path', fieldName: 'path', minWidth: 200, isResizable: true },
             { key: 'size', name: 'Size', fieldName: 'size', minWidth: 100, isResizable: true },
+            { key: 'action', name: 'Action', minWidth: 70, onRender: (item: IFileInfo) => {
+              return (
+                <Link onClick={() => {
+                  const rmFiles = files.filter((e) => e.path !== item.path);
+                  setFiles(rmFiles);
+                }}>
+                  Remove
+                </Link>
+              );
+            } },
           ]}
           items={files}
           selectionMode={SelectionMode.none}
