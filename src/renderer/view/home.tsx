@@ -25,15 +25,6 @@ const Home = () => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
   const [settingsIsOpen, { setTrue: openSettings, setFalse: dismissSettings }] = useBoolean(false);
 
-  useEffect(() => {
-    window.api.getConsoleInfo()
-    .then(info => {
-      setConsoleAddress(info.address);
-      setConsolePort(String(info.port));
-    })
-    .catch(err => console.error(err));
-  }, []);
-
   const loadRoms = async () => {
     const newFiles: IFileInfo[] = await window.api.loadFiles();
     const filesArr = [...files];
@@ -50,6 +41,22 @@ const Home = () => {
     setFiles(filesArr);
   }
 
+  useEffect(() => {
+    window.api.getConsoleInfo()
+    .then(info => {
+      setConsoleAddress(info.address);
+      setConsolePort(String(info.port));
+    })
+    .catch(err => console.error(err));
+
+    window.api.handleOpenFiles((_event) => {
+      loadRoms();
+    });
+    window.api.handleOpenSettings((_e) => {
+      openSettings();
+    });
+  }, []);
+
   return (
     <div>
       <div className='header'>
@@ -57,8 +64,8 @@ const Home = () => {
           <CommandBar
             items={[
               {
-                key: 'loadRoms',
-                text: 'Load ROMs',
+                key: 'openRoms',
+                text: 'Open ROMs',
                 iconProps: { iconName: 'FolderOpen' },
                 onClick: loadRoms,
               }, {

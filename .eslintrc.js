@@ -10,6 +10,7 @@ module.exports = {
     "@typescript-eslint/lines-between-class-members": "off",
     "react/destructuring-assignment": "off",
     "jsx-a11y/anchor-is-valid": "off",
+    "react-hooks/exhaustive-deps": "off",
     "prettier/prettier": "off",
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
