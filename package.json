@@ -203,6 +203,8 @@
   "dependencies": {
     "@fluentui/font-icons-mdl2": "^8.4.3",
     "@fluentui/react": "^8.81.1",
+    "@fluentui/react-components": "^9.3.2",
+    "@fluentui/react-icons": "^2.0.182",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.4",
     "electron-store": "^8.0.2",

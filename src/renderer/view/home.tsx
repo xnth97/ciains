@@ -1,18 +1,47 @@
 import { useState, useEffect } from 'react';
 import {
-  TextField,
+  // TextField,
   Stack,
-  DefaultButton,
-  PrimaryButton,
-  DetailsList,
+  // DefaultButton,
+  // PrimaryButton,
+  // DetailsList,
   SelectionMode,
-  Dialog,
-  DialogFooter,
-  DialogType,
+  // Dialog,
+  // DialogFooter,
+  // DialogType,
   Panel,
-  CommandBar,
-  Link,
+  // CommandBar,
+  // Link,
 } from '@fluentui/react';
+import {
+  Button,
+  Link,
+} from '@fluentui/react-components';
+import { 
+  Dialog,
+  DialogSurface, 
+  DialogTitle, 
+  DialogBody, 
+  DialogActions, 
+  InputField,
+  Toolbar,
+  ToolbarButton,
+  ToolbarDivider,
+  Table,
+  TableRow,
+  TableHeader,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+  TableCellLayout,
+  TableCellActions,
+} from '@fluentui/react-components/unstable';
+import {
+  FolderOpenRegular,
+  SettingsRegular,
+  DismissRegular,
+  DeleteRegular,
+} from '@fluentui/react-icons';
 import { useBoolean } from '@fluentui/react-hooks';
 import './home.scss';
 import IFileInfo from '../../main/model/IFileInfo';
@@ -57,32 +86,28 @@ const Home = () => {
     });
   }, []);
 
+  const columns = [
+    { key: 'name', name: 'Name', fieldName: 'name', minWidth: 200, isResizable: true },
+    // { key: 'path', name: 'Path', fieldName: 'path', minWidth: 200, isResizable: true },
+    { key: 'size', name: 'Size', fieldName: 'size', minWidth: 100, isResizable: true },
+  ];
+
   return (
     <div>
       <div className='header'>
-        <div style={{ marginLeft: -32, marginRight: -16 }}>
-          <CommandBar
-            items={[
-              {
-                key: 'openRoms',
-                text: 'Open ROMs',
-                iconProps: { iconName: 'FolderOpen' },
-                onClick: loadRoms,
-              }, {
-                key: 'clearRoms',
-                text: 'Clear ROMs',
-                iconProps: { iconName: 'Clear' },
-                onClick: toggleHideDialog,
-              }
-            ]}
-            farItems={[
-              {
-                key: 'settings',
-                iconProps: { iconName: 'Settings' },
-                onClick: openSettings,
-              },
-            ]}
-          />
+        <div style={{ marginLeft: -16, marginRight: -16 }}>
+          <Toolbar>
+            <ToolbarButton icon={<FolderOpenRegular />} onClick={loadRoms}>
+              Open ROMs
+            </ToolbarButton>
+            <ToolbarButton icon={<DismissRegular />} onClick={toggleHideDialog}>
+              Clear ROMs
+            </ToolbarButton>
+            <ToolbarDivider />
+            <ToolbarButton icon={<SettingsRegular />} onClick={openSettings}>
+              Settings
+            </ToolbarButton>
+          </Toolbar>
         </div>
         <div>
           <Stack
@@ -92,11 +117,11 @@ const Home = () => {
             <Stack horizontal tokens={{
               childrenGap: 16,
             }}>
-              <TextField 
+              <InputField
                 label='Console Address'
                 value={consoleAddress} 
                 onChange={e => setConsoleAddress(e.target.value)} />
-              <TextField 
+              <InputField 
                 label='Console Port' 
                 value={consolePort} 
                 onChange={e => setConsolePort(e.target.value)} />
@@ -106,53 +131,63 @@ const Home = () => {
       </div>
 
       <div className='detailList'>
-        <DetailsList
-          columns={[
-            { key: 'name', name: 'Name', fieldName: 'name', minWidth: 200, isResizable: true },
-            { key: 'path', name: 'Path', fieldName: 'path', minWidth: 200, isResizable: true },
-            { key: 'size', name: 'Size', fieldName: 'size', minWidth: 100, isResizable: true },
-            { key: 'action', name: 'Action', minWidth: 70, onRender: (item: IFileInfo) => {
-              return (
-                <Link onClick={() => {
-                  const rmFiles = files.filter((e) => e.path !== item.path);
-                  setFiles(rmFiles);
-                }}>
-                  Remove
-                </Link>
-              );
-            } },
-          ]}
-          items={files}
-          selectionMode={SelectionMode.none}
-          />
+        <Table>
+          <TableHeader>
+            <TableRow>
+              { columns.map(col => (
+                <TableHeaderCell key={col.key}>{col.name}</TableHeaderCell>
+              )) }
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            { files.map(file => (
+              <TableRow key={file.path}>
+                <TableCell>
+                  <TableCellLayout>{file.name}</TableCellLayout>
+                  <TableCellActions>
+                    <Button icon={<DeleteRegular/>} appearance='subtle' onClick={() => {
+                      const rmFiles = files.filter((e) => e.path !== file.path);
+                      setFiles(rmFiles);
+                    }} />
+                  </TableCellActions>
+                </TableCell>
+                <TableCell>
+                  <TableCellLayout>{file.size}</TableCellLayout>
+                </TableCell>
+              </TableRow>
+            )) }
+          </TableBody>
+        </Table>
       </div>
       
       <div className='footer'>
         <Stack horizontal style={{ margin: '8pt' }} tokens={{ childrenGap: 16 }}>
-          <PrimaryButton style={{ width: '96pt' }} text='Install' onClick={async () => {
+          <Button appearance='primary' style={{ width: '96pt' }} onClick={async () => {
             const filePaths = files.map((obj) => obj.path);
             await window.api.install(consoleAddress, consolePort, filePaths);
-          }} />
+          }}>
+            Install
+          </Button>
         </Stack>
         
       </div>
 
       <Dialog 
-        hidden={hideDialog} 
-        onDismiss={toggleHideDialog}
-        dialogContentProps={{
-          type: DialogType.normal,
-          title: 'Clear all ROMs?',
-          subText: 'This cannot be undone.',
-        }}
+        open={!hideDialog} 
       >
-        <DialogFooter>
-          <DefaultButton onClick={toggleHideDialog} text='Cancel' />
-          <PrimaryButton onClick={() => {
-            toggleHideDialog();
-            setFiles([]);
-          }} text='Clear' />
-        </DialogFooter>
+        <DialogSurface>
+          <DialogBody>
+            <DialogTitle>Clear all ROMs?</DialogTitle>
+            {/* <DialogContent>This cannot be undone</DialogContent> */}
+            <DialogActions>
+              <Button onClick={toggleHideDialog}>Cancel</Button>
+              <Button appearance='primary' onClick={() => {
+                toggleHideDialog();
+                setFiles([]);
+              }}>Clear</Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
       </Dialog>
 
       <Panel 
