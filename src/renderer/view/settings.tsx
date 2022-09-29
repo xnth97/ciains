@@ -1,11 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Stack,
-  TextField,
-  PrimaryButton,
-  DefaultButton,
-  ActionButton,
 } from '@fluentui/react';
+import {
+  Button,
+  FluentProvider,
+  webLightTheme,
+} from '@fluentui/react-components';
+import {
+  InputField
+} from '@fluentui/react-components/unstable';
+import {
+  Wifi124Regular,
+} from '@fluentui/react-icons';
 
 interface ISettingsProps {
   onClose: () => void;
@@ -44,17 +51,21 @@ const Settings = (props: ISettingsProps) => {
 
   return (
     <div>
-      <Stack tokens={{
-        childrenGap: 16,
-      }}>
-        <TextField label='Host Address' value={hostAddress} onChange={(e) => setHostAddress(e.target.value)} />
-        <TextField label='Host Port' value={hostPort} onChange={(e) => setHostPort(e.target.value)} />
-        <ActionButton text='Detect Address' iconProps={{ iconName: 'WifiEthernet' }} onClick={detectAddress} />
-        <Stack horizontal tokens={{ childrenGap: 8 }}>
-          <PrimaryButton onClick={save}>Save</PrimaryButton>
-          <DefaultButton onClick={props.onClose}>Cancel</DefaultButton>
+      <FluentProvider theme={webLightTheme}>
+        <Stack tokens={{
+          childrenGap: 16,
+        }}>
+          <InputField label='Host Address' value={hostAddress} onChange={(e) => setHostAddress(e.target.value)} />
+          <InputField label='Host Port' value={hostPort} onChange={(e) => setHostPort(e.target.value)} />
+          <Button appearance='subtle' icon={<Wifi124Regular />} onClick={detectAddress}>
+            Detect Address
+          </Button>
+          <Stack horizontal tokens={{ childrenGap: 8 }}>
+            <Button appearance='primary' onClick={save}>Save</Button>
+            <Button onClick={props.onClose}>Cancel</Button>
+          </Stack>
         </Stack>
-      </Stack>
+      </FluentProvider>
     </div>
   );
 };

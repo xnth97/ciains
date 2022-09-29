@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react';
 import {
-  // TextField,
   Stack,
-  // DefaultButton,
-  // PrimaryButton,
-  // DetailsList,
-  SelectionMode,
-  // Dialog,
-  // DialogFooter,
-  // DialogType,
   Panel,
-  // CommandBar,
-  // Link,
 } from '@fluentui/react';
 import {
   Button,
-  Link,
 } from '@fluentui/react-components';
 import { 
   Dialog,
@@ -144,15 +133,15 @@ const Home = () => {
               <TableRow key={file.path}>
                 <TableCell>
                   <TableCellLayout>{file.name}</TableCellLayout>
+                </TableCell>
+                <TableCell>
+                  <TableCellLayout>{file.size}</TableCellLayout>
                   <TableCellActions>
                     <Button icon={<DeleteRegular/>} appearance='subtle' onClick={() => {
                       const rmFiles = files.filter((e) => e.path !== file.path);
                       setFiles(rmFiles);
                     }} />
                   </TableCellActions>
-                </TableCell>
-                <TableCell>
-                  <TableCellLayout>{file.size}</TableCellLayout>
                 </TableCell>
               </TableRow>
             )) }
