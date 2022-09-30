@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Stack,
   Panel,
 } from '@fluentui/react';
 import {
@@ -83,8 +82,8 @@ const Home = () => {
 
   return (
     <div>
-      <div className='header'>
-        <div style={{ marginLeft: -16, marginRight: -16 }}>
+      <div className='fixed top-0 left-0'>
+        <div>
           <Toolbar>
             <ToolbarButton icon={<FolderOpenRegular />} onClick={loadRoms}>
               Open ROMs
@@ -98,28 +97,19 @@ const Home = () => {
             </ToolbarButton>
           </Toolbar>
         </div>
-        <div>
-          <Stack
-            horizontal
-            horizontalAlign='space-between'
-            >
-            <Stack horizontal tokens={{
-              childrenGap: 16,
-            }}>
-              <InputField
-                label='Console Address'
-                value={consoleAddress} 
-                onChange={e => setConsoleAddress(e.target.value)} />
-              <InputField 
-                label='Console Port' 
-                value={consolePort} 
-                onChange={e => setConsolePort(e.target.value)} />
-            </Stack>
-          </Stack>
+        <div className='flex flex-row space-x-4 mx-4'>
+          <InputField
+            label='Console Address'
+            value={consoleAddress}
+            onChange={e => setConsoleAddress(e.target.value)} />
+          <InputField
+            label='Console Port'
+            value={consolePort}
+            onChange={e => setConsolePort(e.target.value)} />
         </div>
       </div>
 
-      <div className='detailList'>
+      <div className='absolute top-24 w-screen px-4 pb-16 -z-50'>
         <Table>
           <TableHeader>
             <TableRow>
@@ -149,16 +139,13 @@ const Home = () => {
         </Table>
       </div>
       
-      <div className='footer'>
-        <Stack horizontal style={{ margin: '8pt' }} tokens={{ childrenGap: 16 }}>
-          <Button appearance='primary' style={{ width: '96pt' }} onClick={async () => {
-            const filePaths = files.map((obj) => obj.path);
-            await window.api.install(consoleAddress, consolePort, filePaths);
-          }}>
-            Install
-          </Button>
-        </Stack>
-        
+      <div className='absolute bottom-4 left-4 z-50'>
+        <Button appearance='primary' style={{ width: '96pt' }} onClick={async () => {
+          const filePaths = files.map((obj) => obj.path);
+          await window.api.install(consoleAddress, consolePort, filePaths);
+        }}>
+          Install
+        </Button>
       </div>
 
       <Dialog 
