@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import {
-  Stack,
-} from '@fluentui/react';
-import {
   Button,
-  FluentProvider,
-  webLightTheme,
 } from '@fluentui/react-components';
 import {
-  InputField
+  InputField,
+  DialogActions,
 } from '@fluentui/react-components/unstable';
 import {
   Wifi124Regular,
@@ -50,22 +46,16 @@ const Settings = (props: ISettingsProps) => {
   };
 
   return (
-    <div>
-      <FluentProvider theme={webLightTheme}>
-        <Stack tokens={{
-          childrenGap: 16,
-        }}>
-          <InputField label='Host Address' value={hostAddress} onChange={(e) => setHostAddress(e.target.value)} />
-          <InputField label='Host Port' value={hostPort} onChange={(e) => setHostPort(e.target.value)} />
-          <Button appearance='subtle' icon={<Wifi124Regular />} onClick={detectAddress}>
-            Detect Address
-          </Button>
-          <Stack horizontal tokens={{ childrenGap: 8 }}>
-            <Button appearance='primary' onClick={save}>Save</Button>
-            <Button onClick={props.onClose}>Cancel</Button>
-          </Stack>
-        </Stack>
-      </FluentProvider>
+    <div className='flex flex-col space-y-4'>
+      <InputField label='Host Address' value={hostAddress} onChange={(e) => setHostAddress(e.target.value)} />
+      <InputField label='Host Port' value={hostPort} onChange={(e) => setHostPort(e.target.value)} />
+      <Button appearance='subtle' icon={<Wifi124Regular />} onClick={detectAddress}>
+        Detect Address
+      </Button>
+      <div className='flex flex-row space-x-2 justify-end'>
+        <Button onClick={props.onClose}>Cancel</Button>
+        <Button appearance='primary' onClick={save}>Save</Button>
+      </div>
     </div>
   );
 };

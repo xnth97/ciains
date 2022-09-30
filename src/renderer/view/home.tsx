@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import {
-  Panel,
-} from '@fluentui/react';
-import {
   Button,
 } from '@fluentui/react-components';
 import { 
   Dialog,
-  DialogSurface, 
+  DialogSurface,
+  // DialogContent,
   DialogTitle, 
   DialogBody, 
   DialogActions, 
@@ -31,7 +29,6 @@ import {
   DeleteRegular,
 } from '@fluentui/react-icons';
 import { useBoolean } from '@fluentui/react-hooks';
-import './home.scss';
 import IFileInfo from '../../main/model/IFileInfo';
 import Settings from './settings';
 
@@ -39,7 +36,7 @@ const Home = () => {
   const [consoleAddress, setConsoleAddress] = useState('');
   const [consolePort, setConsolePort] = useState('5000');
   const [files, setFiles] = useState<Array<IFileInfo>>([]);
-  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+  const [showDialog, { toggle: toggleShowDialog }] = useBoolean(false);
   const [settingsIsOpen, { setTrue: openSettings, setFalse: dismissSettings }] = useBoolean(false);
 
   const loadRoms = async () => {
@@ -88,7 +85,7 @@ const Home = () => {
             <ToolbarButton icon={<FolderOpenRegular />} onClick={loadRoms}>
               Open ROMs
             </ToolbarButton>
-            <ToolbarButton icon={<DismissRegular />} onClick={toggleHideDialog}>
+            <ToolbarButton icon={<DismissRegular />} onClick={toggleShowDialog}>
               Clear ROMs
             </ToolbarButton>
             <ToolbarDivider />
@@ -149,16 +146,16 @@ const Home = () => {
       </div>
 
       <Dialog 
-        open={!hideDialog} 
+        open={showDialog} 
       >
         <DialogSurface>
           <DialogBody>
             <DialogTitle>Clear all ROMs?</DialogTitle>
             {/* <DialogContent>This cannot be undone</DialogContent> */}
             <DialogActions>
-              <Button onClick={toggleHideDialog}>Cancel</Button>
+              <Button onClick={toggleShowDialog}>Cancel</Button>
               <Button appearance='primary' onClick={() => {
-                toggleHideDialog();
+                toggleShowDialog();
                 setFiles([]);
               }}>Clear</Button>
             </DialogActions>
@@ -166,14 +163,14 @@ const Home = () => {
         </DialogSurface>
       </Dialog>
 
-      <Panel 
-        headerText='Settings'
-        isOpen={settingsIsOpen}
-        onDismiss={dismissSettings}
-        closeButtonAriaLabel='Close'
+      <Dialog
+        open={settingsIsOpen}
       >
-        <Settings onClose={dismissSettings} />
-      </Panel>
+        <DialogSurface>
+          <DialogTitle>Settings</DialogTitle>
+          <Settings onClose={dismissSettings} />
+        </DialogSurface>
+      </Dialog>
     </div>
   );
 };
